@@ -1,0 +1,46 @@
+Rotate String--------------------------------------->
+
+
+class Solution {
+public:
+    bool rotateString(string s, string goal) {
+        int l1=s.length();
+        int i=0;
+        bool ans=false;
+        char temp=' ';
+        if(s==goal)
+        return true;
+
+        for(i=1;i<l1;i++)
+        {
+            temp=s[0];
+            s=s.substr(1,l1)+temp;
+            if(s==goal)
+            {
+            ans=true;
+            break;
+            }
+        }
+        return ans;
+    }
+};
+
+
+Repeated String Match----------------------------------->
+
+class Solution {
+public:
+    int repeatedStringMatch(string a, string b) {
+        int cnt = 1;
+        string temp = a;
+        while(a.length() < b.length()){
+            a += temp;
+            cnt++;
+        }
+        if(a.find(b) != -1) return cnt;
+        a += temp;
+        cnt++;
+        if(a.find(b) != -1) return cnt;
+        return -1;
+    }
+};

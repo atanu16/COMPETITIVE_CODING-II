@@ -1,0 +1,78 @@
+Worksheet 3
+
+Experiment Topic: Heap Model
+
+Experiment Name:  To demonstrate the concept of Heap model
+
+Problem1: Last stone weight
+
+https://leetcode.com/problems/last-stone-weight/
+
+Probem2: Cheapest flights with k shops
+
+https://leetcode.com/problems/cheapest-flights-within-k-stops/
+
+
+1.
+
+class Solution {
+public:
+    int lastStoneWeight(vector<int>& stones) {
+        sort(stones.begin(), stones.end(), greater<int>());
+        int i = 0;
+        while (i<stones.size() && (i+1)<stones.size()){
+            int res = stones[i] - stones[i+1];
+            if (res != 0){
+                stones.erase(stones.begin());
+                stones[0] = res;
+                sort(stones.begin(), stones.end(), greater<int>());
+            }
+            else{
+                stones.erase(stones.begin(), stones.begin()+2);
+            }
+        }
+        if (stones.size()){
+            return stones[0];
+        }
+        return 0;
+    }
+};
+
+
+
+2.
+
+
+class Solution {
+public:
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+        vector<vector<pair<int, int>>> adj(n);
+        for(auto flight : flights){
+            // flight[0] represent node i, flight[1] represent neighbor node of node i, flight[2] represent cost between node i to neighbor node
+            adj[flight[0]].push_back({flight[1], flight[2]});
+        }
+        //it will store [node, cost]
+        queue<pair<int, int>> q;
+        q.push({src, 0});
+        //it will store minimum cost to reach each node
+        vector<int> minCost(n, INT_MAX);
+        int stops = 0;
+        while(!q.empty() && stops <= k){
+            int size = q.size();
+            while (size--) {
+                auto [currNode, cost] = q.front();
+                q.pop();
+                for (auto& [neighbour, price] : adj[currNode]) {
+                    if (price + cost < minCost[neighbour]){
+                        minCost[neighbour] = price + cost;
+                        q.push({neighbour, minCost[neighbour]});
+                    }
+                }
+            }
+            stops++;
+        }
+        if(minCost[dst] == INT_MAX)
+            return -1;
+        return minCost[dst];
+    }
+};
